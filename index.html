@@ -26,20 +26,77 @@
             color: #333;
             margin-bottom: 30px;
         }
+
+        .ak-form {
+            text-align: left;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .ak-form h2 {
+            margin: 0 0 16px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .ak-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0;
+        }
+
+        .ak-option label {
+            cursor: pointer;
+        }
+
+        .ak-form button {
+            margin-top: 16px;
+            padding: 10px 24px;
+            background: #4a90d9;
+            color: #fff;
+            border: 0;
+            border-radius: 4px;
+            font-size: 15px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Привет, это тестовая страница</h1>
-        
-            <script 
-                src=https://pxl.ru.altkraft.com/form/js/embed_v1.js>
-            </script>
-            <iframe 
-                src="https://pxl.ru.altkraft.com/form?form=6PymEmRjKQbR8ZYCbTc19mq7ZfUHUQTTHAUPMker88rBgECTnkjJ54HD2N97x3WAwSUhoC4Civv4Pf7XJw6gNDj9&iframe=1" 
-                frameborder="0" name="ak-form-6PymEmRjKQbR8ZYCbTc19mq7ZfUHUQTTHAUPMker88rBgECTnkjJ54HD2N97x3WAwSUhoC4Civv4Pf7XJw6gNDj9" 
-                class="ak-form" width="100%" sandbox="allow-same-origin allow-forms allow-scripts allow-popups allow-popups-to-escape-sandbox allow-top-navigation">
-            </iframe>
+
+        <!-- Итоговая форма: только вопросы. Ответы никуда не отправляются:
+             адрес отправки не задан, при нажатии «Отправить» страница
+             просто перезагружается с выбранным значением в адресе. -->
+        <form class="ak-form">
+            <h2>Почему Вы решили отписаться от всех рассылок?</h2>
+
+            <div class="ak-option">
+                <input type="radio" id="opt1" name="field_11" value="Вариант 1" required>
+                <label for="opt1">Вариант 1</label>
+            </div>
+            <div class="ak-option">
+                <input type="radio" id="opt2" name="field_11" value="Вариант 2">
+                <label for="opt2">Вариант 2</label>
+            </div>
+            <div class="ak-option">
+                <input type="radio" id="opt3" name="field_11" value="Вариант 3">
+                <label for="opt3">Вариант 3</label>
+            </div>
+            <div class="ak-option">
+                <input type="radio" id="opt4" name="field_11" value="Вариант 4">
+                <label for="opt4">Вариант 4</label>
+            </div>
+            <div class="ak-option">
+                <input type="radio" id="opt5" name="field_11" value="Вариант 5">
+                <label for="opt5">Вариант 5</label>
+            </div>
+
+            <button type="submit">Отправить</button>
+        </form>
     </div>
 </body>
 </html>
