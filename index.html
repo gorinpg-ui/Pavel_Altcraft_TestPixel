@@ -134,7 +134,7 @@
             acDataLayer.push({
                 event: 'unsub_answer',
                 answer: checked.value,
-                user_id: new URLSearchParams(location.search).get('user_id') || ''
+                profile_id: new URLSearchParams(location.search).get('profile_id') || ''
             });
             document.getElementById('ak-status').textContent =
                 'Ответ передан в платформу: ' + checked.value;
