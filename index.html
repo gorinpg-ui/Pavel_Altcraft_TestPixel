@@ -118,33 +118,24 @@
     </div>
 
     <script>
-        // ---- Передача ответа формы в платформу как цели ----
-        // База профилей, в которой ищется подписчик (у каждой страницы своё значение).
-        var AK_DB_ID = 30;
-        // При отправке формы ответ кладётся в data layer: событие unsub_answer
-        // и поле answer со значением выбранного варианта.
-        // В Менеджере тегов на это событие настраивается триггер «Специальное событие»,
-        // а тег регистрирует цель со значением переменной answer.
+        // ---- Передача ответа формы в платформу через Менеджер тегов ----
+        // При отправке формы ответ кладётся в data layer: событие unsub_answer,
+        // поле answer со значением выбранного варианта и поле user_id
+        // (значение параметра user_id из адреса страницы — по нему Менеджер тегов
+        // найдёт профиль в платформе через пиксель).
+        // Вся остальная настройка — в интерфейсе платформы (Менеджер тегов):
+        // переменные уровня данных, триггер «Специальное событие» и тег
+        // «Пользовательский HTML» с кодом пикселя.
         document.getElementById('ak-form').addEventListener('submit', function (e) {
             // Страница не перезагружается, чтобы запрос цели успел уйти в платформу
             e.preventDefault();
             var checked = document.querySelector('input[name="field_11"]:checked');
             if (!checked) return;
-            acDataLayer.push({ event: 'unsub_answer', answer: checked.value });
-            // Регистрация цели в платформе: название цели = выбранный вариант.
-            // ak_pixel_push(goals, value, match, update, matching_mode, db_id)
-            // Связь с профилем: значение пользовательского поля user_id приходит
-            // в адресе страницы — ссылка отписки из письма содержит параметр user_id.
-            // Персональные данные в ссылке не передаются.
-            // Если параметра нет, цель привязывается по cookie пикселя.
-            if (window.ak_pixel_push) {
-                var uid = new URLSearchParams(location.search).get('user_id');
-                if (uid) {
-                    ak_pixel_push(checked.value, 0, { db_id: AK_DB_ID, field_name: 'user_id', field_value: uid }, {}, 'custom', AK_DB_ID);
-                } else {
-                    ak_pixel_push(checked.value, 0, {}, {}, '', 0);
-                }
-            }
+            acDataLayer.push({
+                event: 'unsub_answer',
+                answer: checked.value,
+                user_id: new URLSearchParams(location.search).get('user_id') || ''
+            });
             document.getElementById('ak-status').textContent =
                 'Ответ передан в платформу: ' + checked.value;
             // Отладка (в итоговой версии убрать): состояние data layer после отправки
@@ -157,23 +148,5 @@
             } catch (err) {}
         });
     </script>
-
-    <script>
-        // ---- Пиксель Альткрафт (ID 12): регистрация целей ----
-        // Код из настроек пикселя, auto_load выключен — цель «Вариант 1»
-        // НЕ регистрируется при загрузке страницы, цели отправляются
-        // вручную через ak_pixel_push при отправке формы.
-        !function(){var e={url:"https://pxl.ru.altkraft.com/pixel?k=2xADTBesG0R3xdS%2BRtabjAOW589eissDmeequ6BWpQqjJVDLpUf9NA%3D%3D&s=gs2tdRNt2IY%3D",goals:"Вариант 1",value:parseFloat("0"),timeout:parseInt("0"),after_scroll:JSON.parse("false"),auto_load:JSON.parse("false")},o=function(o,t,n,a){var d=[].concat(o).map(function(e){return encodeURIComponent(e)}).join(","),c=encodeURIComponent(String(t||0)),i=encodeURIComponent(n.matching_mode||""),r=encodeURIComponent(n.db_id||0),u=encodeURIComponent(JSON.stringify(n.match||{})),l=encodeURIComponent(JSON.stringify(n.update||{}));setTimeout(function(){(new Image).src=[e.url,"goals="+d,"value="+c,"db_id="+r,"mmode="+i,"match="+u,"update="+l].join("&")},a)},t=!1,n=function(){t||(t=!0,e.after_scroll?document.addEventListener("scroll",function(){(window.pageYOffset||document.documentElement.scrollTop>0)&&o(e.goals,e.value,{},e.timeout)},{once: true}):e.auto_load&&o(e.goals,e.value,{},e.timeout))};"complete"===document.readyState||"interactive"===document.readyState?n():window.addEventListener("load",n);window.ak_pixel_push=function(e,t,n,a,d,c){var i=[];Array.isArray(e)?i=e:i[0]=e,o(i,t,{match:n,update:a,matching_mode:d,db_id:c},0)}}();
-        // Отладка (в итоговой версии убрать): логируем вызовы ak_pixel_push
-        try {
-            var origPush = window.ak_pixel_push;
-            window.ak_pixel_push = function (g, v, m, u, mm, db) {
-                document.body.setAttribute('data-ak-push',
-                    'goals:' + JSON.stringify(g) + ';value:' + v +
-                    ';match:' + JSON.stringify(m) + ';mmode:' + mm + ';db:' + db);
-                return origPush(g, v, m, u, mm, db);
-            };
-        } catch (err) {}
-        </script>
 </body>
 </html>
